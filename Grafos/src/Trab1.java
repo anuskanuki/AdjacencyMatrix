@@ -1,8 +1,9 @@
+
+import java.util.Arrays;
+
 /*
 Anuska Kepler Rehn
  */
-import java.util.Arrays;
-
 public class Trab1 {
 
     public static void main(String[] args) {
@@ -17,9 +18,11 @@ public class Trab1 {
         System.out.println(tipoDoGrafo(minhaMatriz));
         System.out.println(arestasDoGrafo(minhaMatriz));
         System.out.println(grausDoVertice(minhaMatriz));
-
     }
 
+    /*
+    Matriz 
+     */
     private static int[][] geraMatriz() {
         int[][] matrix = new int[5][5];
         for (int x = 0; x < matrix.length; x++) {
@@ -33,12 +36,6 @@ public class Trab1 {
                 }
             }
         }
-//        for (int x = 0; x < matrix.length; x++) {
-//            for (int i = 0; i < matrix[x].length; i++) {
-//                System.out.print(matrix[x][i]);
-//            }
-//            System.out.println();
-//        }
         return matrix;
     }
 
@@ -53,56 +50,15 @@ public class Trab1 {
         System.out.println("");
     }
 
+    /*
+    simples ou miltigrafo
+     */
     private static boolean ehSimples(int[][] matriz) {
         if (arestaParalela(matriz)) {
             return true;
         } else if (loop(matriz)) {
             return true;
         }
-        return false;
-    }
-
-    private static boolean ehDigrafo(int[][] matriz) {
-        for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
-            for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
-                if (indiceLinha != indiceColuna) {
-                    if (matriz[indiceLinha][indiceColuna] != matriz[indiceColuna][indiceLinha]) {
-                        return true;
-                    }
-                }
-            }
-        }
-        // Verificar exceção
-        return false;
-    }
-
-    private static boolean ehCompleto(int[][] matriz) {
-        // diagonal principal zerada e o resto 1, pq todos se relacionam com todos menos com si mesmos
-
-        if (ehSimples(matriz)) {
-            for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
-                for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
-                    if (matriz[indiceLinha][indiceColuna] == 1) {
-                        return true;
-                    }
-                }
-            }
-        } else {
-
-        }
-
-        return false;
-    }
-
-    private static boolean ehRegular(int[][] matriz) {
-        for (int i = 0; i < matriz.length; i++) {
-            int valor = matriz[i][i];
-
-            if (valor != 0) {
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -141,31 +97,26 @@ public class Trab1 {
         return false;
     }
 
-    private static boolean ehNulo(int[][] matriz) {
+    /*
+    dirigido ou não dirigido
+     */
+    private static boolean ehDigrafo(int[][] matriz) {
         for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
             for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
-                if (matriz[indiceLinha][indiceColuna] != 0) {
-                    return false;
+                if (indiceLinha != indiceColuna) {
+                    if (matriz[indiceLinha][indiceColuna] != matriz[indiceColuna][indiceLinha]) {
+                        return true;
+                    }
                 }
             }
         }
-        return true;
+        // Verificar exceção
+        return false;
     }
 
-    private static boolean ehBipartido(int[][] matriz) {
-        if (matriz.length >= 3 && ehCompleto(matriz)) {
-            return false;
-        }
-//        for (int indiceLinha = 0; indiceLinha < array.length; indiceLinha++) {
-//            for (int indiceColuna = 0; indiceColuna < array.length; indiceColuna++) {
-////                if () {
-//                return false;
-////                }
-//            }
-//        }
-        return true;
-    }
-
+    /*
+    Grau
+     */
     private static String grauDigrafo(int[][] matriz) {
         String resposta = "";
         // grau de entrada e grau de saída de cada vértice
@@ -210,6 +161,9 @@ public class Trab1 {
         return resposta;
     }
 
+    /*
+    Arestas
+     */
     private static String arestasGrafoSimples(int[][] matriz) {
         String conjuntoArestas = "";
         int countArestas = 0;
@@ -260,6 +214,96 @@ public class Trab1 {
         }
 
         return "\tE = {" + conjuntoArestas + "}\n\t Totalizando " + countArestas + " arestas.";
+    }
+
+    /*
+    Completo
+     */
+    private static boolean ehCompleto(int[][] matriz) {
+        // diagonal principal zerada e o resto 1, pq todos se relacionam com todos menos com si mesmos
+
+        if (ehSimples(matriz)) {
+            for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
+                for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
+                    if (matriz[indiceLinha][indiceColuna] == 1) {
+                        return true;
+                    }
+                }
+            }
+        } else {
+
+        }
+
+        return false;
+    }
+
+    /*
+    Regular
+     */
+    private static boolean ehRegular(int[][] matriz) {
+        String resposta = "";
+
+        if (!ehDigrafo(matriz)) {
+
+            int[] grausPorLinha = new int[matriz.length];
+
+            for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
+                for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
+                    if (indiceColuna == indiceLinha) { // loop => *2
+                        if (matriz[indiceLinha][indiceColuna] > 0) {
+                            grausPorLinha[indiceLinha] += matriz[indiceLinha][indiceColuna] * 2;
+                        }
+                    } else {
+                        grausPorLinha[indiceLinha] += matriz[indiceLinha][indiceColuna];
+                    }
+                }
+            }
+            int primeiroElemento = grausPorLinha[0];
+
+            for (int i = 1; i < grausPorLinha.length; i++) {
+                if (grausPorLinha[i] != (primeiroElemento)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            // se for dirigido vejo de uma forma diferente pois há jeitos de graus diferentes
+        }
+
+        return false;
+    }
+
+    /*
+    Nulo
+     */
+    private static boolean ehNulo(int[][] matriz) {
+        for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
+            for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
+                if (matriz[indiceLinha][indiceColuna] != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /*
+    Bipartido
+     */
+    private static boolean ehBipartido(int[][] matriz) {
+        if (matriz.length >= 3 && ehCompleto(matriz)) {
+            return false;
+        }
+
+//        
+//        for (int indiceLinha = 0; indiceLinha < array.length; indiceLinha++) {
+//            for (int indiceColuna = 0; indiceColuna < array.length; indiceColuna++) {
+////                if () {
+//                return false;
+////                }
+//            }
+//        }
+        return true;
     }
 
     /*
