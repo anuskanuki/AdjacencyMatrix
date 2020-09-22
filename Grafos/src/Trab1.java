@@ -54,14 +54,12 @@ public class Trab1 {
     }
 
     private static boolean ehSimples(int[][] matriz) {
-        boolean temLoop = loop(matriz);
-        boolean temArestaParalela = arestaParalela(matriz);
-
-        if (temArestaParalela || temLoop) {
+        if (arestaParalela(matriz)) {
             return true;
-        } else {
-            return false;
+        } else if (loop(matriz)) {
+            return true;
         }
+        return false;
     }
 
     private static boolean ehDigrafo(int[][] matriz) {
@@ -109,14 +107,25 @@ public class Trab1 {
     }
 
     private static boolean loop(int[][] matriz) {
-        for (int i = 0; i < matriz.length; i++) {
-            int valor = matriz[i][i];
 
-            if (valor != 0) {
-                return true;
+        for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
+            for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
+                if (indiceColuna == indiceLinha) {
+                    if (matriz[indiceLinha][indiceColuna] > 0) {
+                        return true;
+                    }
+                }
             }
         }
 
+//        for (int i = 0; i < matriz.length; i++) {
+//
+//            int valor = matriz[i][i];
+//
+//            if (valor != 0) {
+//                return true;
+//            }
+//        }
         return false;
     }
 
@@ -170,8 +179,8 @@ public class Trab1 {
 
         for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
             for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
-                if (indiceColuna == indiceLinha) { //se for na diagonal principal, é  dobro do valor, pois um loop vale 2
-                    if (matriz[indiceLinha][indiceColuna] > 1) {
+                if (indiceColuna == indiceLinha) { //se for na diagonal principal, é  dobro do valor, pois loop vale 2
+                    if (matriz[indiceLinha][indiceColuna] > 0) {
                         grauPelaLinha[indiceLinha] += matriz[indiceLinha][indiceColuna] * 2;
                     }
                 } else {
