@@ -110,7 +110,7 @@ public class Trab1 {
                 }
             }
         }
-        // Verificar exceção
+        // Verificar exceção? --- não
         return false;
     }
 
@@ -118,9 +118,63 @@ public class Trab1 {
     Grau
      */
     private static String grauDigrafo(int[][] matriz) {
-        String resposta = "";
-        // grau de entrada e grau de saída de cada vértice
+        // Em um digrafo (grafo dirigido) os vértices possuem grau de entrada (coluna matriz) e grau de saída (linha matriz)
 
+        String resposta = "";
+
+        int[] grauLinhaSaida = new int[matriz.length];
+        int[] grauColunaEntrada = new int[matriz.length];
+
+        //saída - LINHA
+        for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
+            for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
+                if (indiceColuna == indiceLinha) { //se for na diagonal principal, é  dobro do valor, pois loop vale 2
+                    if (matriz[indiceLinha][indiceColuna] > 0) {
+                        grauLinhaSaida[indiceLinha] += matriz[indiceLinha][indiceColuna] * 2;
+                    }
+                } else {
+                    grauLinhaSaida[indiceLinha] += matriz[indiceLinha][indiceColuna];
+                }
+            }
+        }
+
+        //entrada - COLUNA
+        for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
+            for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
+                if (indiceColuna == indiceLinha) { //loop vale 2
+                    if (matriz[indiceLinha][indiceColuna] > 0) {
+                        grauColunaEntrada[indiceColuna] += matriz[indiceLinha][indiceColuna] * 2;
+                    }
+                } else {
+                    grauColunaEntrada[indiceColuna] += matriz[indiceLinha][indiceColuna];
+                }
+            }
+        }
+
+        //mostrar os resultados - vértice X tem grau Y
+        for (int i = 0; i < grauLinhaSaida.length; i++) {
+            resposta += "\tVértice " + i + " - Grau de Saída: " + grauLinhaSaida[i] + "\n";
+        }
+
+        for (int i = 0; i < grauColunaEntrada.length; i++) {
+            resposta += "\tVértice " + i + " - Grau de Entrada: " + grauColunaEntrada[i] + "\n";
+        }
+
+        int[] sequenciaGraus;
+        sequenciaGraus = grauLinhaSaida;
+
+        //achar a seguencia - ordenar os graus em ordem crescente
+        for (int i = 0; i < sequenciaGraus.length - 1; i++) {
+            for (int j = 0; j < sequenciaGraus.length - 1 - i; j++) {
+                if (sequenciaGraus[j] > sequenciaGraus[j + 1]) {
+                    int aux = sequenciaGraus[j];
+                    sequenciaGraus[j] = sequenciaGraus[j + 1];
+                    sequenciaGraus[j + 1] = aux;
+                }
+            }
+        }
+
+        resposta += "\tSequência de graus: " + Arrays.toString(sequenciaGraus);
         return resposta;
     }
 
@@ -172,10 +226,8 @@ public class Trab1 {
             for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
                 for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
                     if (matriz[indiceLinha][indiceColuna] > 0) {
-                        if (matriz[indiceLinha][indiceColuna] == 1) {
-                            countArestas += matriz[indiceLinha][indiceColuna];
-                            conjuntoArestas += indiceColuna + indiceLinha + ", ";
-                        }
+                        countArestas += matriz[indiceLinha][indiceColuna];
+                        conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
                     }
                 }
             }
@@ -183,7 +235,7 @@ public class Trab1 {
             return "{} (Grafo nulo, portanto, não há arestas.)";
         }
 
-        return "\tE = {" + conjuntoArestas + "}\n\t Totalizando " + countArestas + " arestas.";
+        return "\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
     }
 
     private static String arestasMultigrafo(int[][] matriz) {
@@ -267,6 +319,9 @@ public class Trab1 {
             }
             return true;
         } else {
+            if (ehNulo(matriz)) {
+                return true;
+            }
             // se for dirigido vejo de uma forma diferente pois há jeitos de graus diferentes
         }
 
@@ -350,7 +405,7 @@ public class Trab1 {
     }
 
     private static String arestasDoGrafo(int[][] matriz) {
-        String resposta = "b. Arestas:\n";
+        String resposta = "b. Arestas:\n\tSendo 'E' o conjunto de arestas pelos índices da matriz Xij, sendo 'i' índiceColuna e 'j' índiceLinha, iniciando do zero:\n";
 
         if (ehSimples(matriz)) {
             resposta += arestasGrafoSimples(matriz);
