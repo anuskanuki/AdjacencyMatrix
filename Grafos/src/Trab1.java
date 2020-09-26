@@ -10,7 +10,7 @@ public class Trab1 {
 
         int[][] minhaMatriz = geraMatriz();
 
-        System.out.println("----- Trabalho 1 . Anuska -----\n");
+        System.out.println("-------- Trabalho 1 . Anuska --------\n");
         System.out.println("Matriz do grafo:\n");
 
         toStringMatriz(minhaMatriz);
