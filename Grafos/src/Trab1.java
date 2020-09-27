@@ -24,19 +24,23 @@ public class Trab1 {
     Matriz 
      */
     private static int[][] geraMatriz() {
-        int[][] matrix = new int[5][5];
-        for (int x = 0; x < matrix.length; x++) {
-            for (int i = 0; i < matrix[x].length; i++) {
-                if ((x == 0) || (x == (matrix.length) - 1)) {
-                    matrix[x][i] = 0;
-                } else if ((i == 0) || (i == (matrix[x].length) - 1)) {
-                    matrix[x][i] = 0;
-                } else {
-                    matrix[x][i] = 1;
-                }
-            }
-        }
-        return matrix;
+
+        // Grafo não dirigido, multigrafo, graus 0,0,4,4,4
+        int[][] matriz0 = {{0, 0, 0, 0, 0}, {0, 1, 1, 1, 0}, {0, 1, 1, 1, 0}, {0, 1, 1, 1, 0}, {0, 0, 0, 0, 0}};
+
+        // Grafo simples, não dirigido, grus 2,2,2,3,3 
+        int[][] matriz1 = {{0, 0, 1, 1, 1}, {0, 0, 1, 1, 1}, {1, 1, 0, 0, 0}, {1, 1, 0, 0, 0}, {1, 1, 0, 0, 0}};
+
+        // Grafo simples, não dirigido, graus 1,1,2,2,3,3
+        int[][] matriz2 = {{0, 1, 1, 1, 0, 0}, {1, 0, 0, 1, 0, 0}, {1, 0, 0, 1, 0, 0}, {1, 1, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 1}, {0, 0, 0, 0, 1, 0}};
+
+        // Grafo multigrafo, não dirigido, graus 2,4,5,5, arestas 0-0, 0-1, 0-2, 0-3, 1-2, 1-0, 2-0 3-0, 2-1
+        int[][] matriz3 = {{1, 1, 1, 1}, {1, 0, 1, 0}, {1, 1, 0, 3}, {1, 0, 3, 0}};
+
+        // Grafo dirigido, 
+        int[][] matriz4 = {{0, 1, 1, 0}, {0, 0, 0, 0}, {0, 0, 1, 1}, {1, 2, 1, 0}};
+
+        return matriz4;
     }
 
     private static void toStringMatriz(int[][] matriz) {
@@ -53,17 +57,11 @@ public class Trab1 {
     /*
     simples ou miltigrafo
      */
-    private static boolean ehSimples(int[][] matriz) {
-        if (arestaParalela(matriz)) {
-            return true;
-        } else if (loop(matriz)) {
-            return true;
-        }
-        return false;
+    private static boolean ehMultigrafo(int[][] matriz) {
+        return arestaParalela(matriz) || loop(matriz);
     }
 
     private static boolean loop(int[][] matriz) {
-
         for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
             for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
                 if (indiceColuna == indiceLinha) {
@@ -73,15 +71,6 @@ public class Trab1 {
                 }
             }
         }
-
-//        for (int i = 0; i < matriz.length; i++) {
-//
-//            int valor = matriz[i][i];
-//
-//            if (valor != 0) {
-//                return true;
-//            }
-//        }
         return false;
     }
 
@@ -110,7 +99,7 @@ public class Trab1 {
                 }
             }
         }
-        // Verificar exceção? --- não
+        // Verificar exceção tipo a do K3? ---> não
         return false;
     }
 
@@ -121,7 +110,6 @@ public class Trab1 {
         // Em um digrafo (grafo dirigido) os vértices possuem grau de entrada (coluna matriz) e grau de saída (linha matriz)
 
         String resposta = "";
-
         int[] grauLinhaSaida = new int[matriz.length];
         int[] grauColunaEntrada = new int[matriz.length];
 
@@ -160,21 +148,36 @@ public class Trab1 {
             resposta += "\tVértice " + i + " - Grau de Entrada: " + grauColunaEntrada[i] + "\n";
         }
 
-        int[] sequenciaGraus;
-        sequenciaGraus = grauLinhaSaida;
+        //Sequência de graus:
+        int[] sequenciaGrausSaida;
+        sequenciaGrausSaida = grauLinhaSaida;
+
+        int[] sequenciaGrausEntrada;
+        sequenciaGrausEntrada = grauColunaEntrada;
 
         //achar a seguencia - ordenar os graus em ordem crescente
-        for (int i = 0; i < sequenciaGraus.length - 1; i++) {
-            for (int j = 0; j < sequenciaGraus.length - 1 - i; j++) {
-                if (sequenciaGraus[j] > sequenciaGraus[j + 1]) {
-                    int aux = sequenciaGraus[j];
-                    sequenciaGraus[j] = sequenciaGraus[j + 1];
-                    sequenciaGraus[j + 1] = aux;
+        for (int i = 0; i < sequenciaGrausSaida.length - 1; i++) {
+            for (int j = 0; j < sequenciaGrausSaida.length - 1 - i; j++) {
+                if (sequenciaGrausSaida[j] > sequenciaGrausSaida[j + 1]) {
+                    int aux = sequenciaGrausSaida[j];
+                    sequenciaGrausSaida[j] = sequenciaGrausSaida[j + 1];
+                    sequenciaGrausSaida[j + 1] = aux;
                 }
             }
         }
 
-        resposta += "\tSequência de graus: " + Arrays.toString(sequenciaGraus);
+        for (int i = 0; i < sequenciaGrausEntrada.length - 1; i++) {
+            for (int j = 0; j < sequenciaGrausEntrada.length - 1 - i; j++) {
+                if (sequenciaGrausEntrada[j] > sequenciaGrausEntrada[j + 1]) {
+                    int aux = sequenciaGrausEntrada[j];
+                    sequenciaGrausEntrada[j] = sequenciaGrausEntrada[j + 1];
+                    sequenciaGrausEntrada[j + 1] = aux;
+                }
+            }
+        }
+
+        resposta += "\tSequência de graus de saída: " + Arrays.toString(sequenciaGrausSaida);
+        resposta += "\n\tSequência de graus de entrada: " + Arrays.toString(sequenciaGrausEntrada);
         return resposta;
     }
 
@@ -234,7 +237,6 @@ public class Trab1 {
         } else {
             return "{} (Grafo nulo, portanto, não há arestas.)";
         }
-
         return "\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
     }
 
@@ -245,18 +247,18 @@ public class Trab1 {
         if (!ehNulo(matriz)) {
             for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
                 for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
-                    if (matriz[indiceLinha][indiceColuna] > 0) {
-                        if (matriz[indiceLinha][indiceColuna] == 1) {
-                            countArestas += matriz[indiceLinha][indiceColuna];
-                            conjuntoArestas += indiceColuna + indiceLinha + ", ";
-                        } else if (matriz[indiceLinha][indiceColuna] > 1) {
-                            //podem haver arestas paralelas, então preciso printar quantas vezes for preciso "AB, AB"
+                    int valorMatriz = matriz[indiceLinha][indiceColuna];
 
-                            for (int i = matriz[indiceLinha][indiceColuna]; i < matriz[indiceLinha][indiceColuna]; i--) {;
-                                countArestas += matriz[indiceLinha][indiceColuna];
-                                conjuntoArestas += indiceColuna + indiceLinha + ", ";
+                    if (valorMatriz > 0) {
+                        countArestas += matriz[indiceLinha][indiceColuna];
+                        if (valorMatriz == 1) {
+                            conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
+
+                        } else if (valorMatriz > 1) { //incrementar corretamente arestas paralelas
+                            for (int i = 1; i <= valorMatriz;) {
+                                conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
+                                i++;
                             }
-
                         }
                     }
                 }
@@ -264,17 +266,17 @@ public class Trab1 {
         } else {
             return "{} (Grafo nulo, portanto, não há arestas.)";
         }
-
-        return "\tE = {" + conjuntoArestas + "}\n\t Totalizando " + countArestas + " arestas.";
+        return "\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
     }
 
     /*
     Completo
      */
     private static boolean ehCompleto(int[][] matriz) {
-        // diagonal principal zerada e o resto 1, pq todos se relacionam com todos menos com si mesmos
+        // diagonal principal zerada e o resto 1, pq todos se relacionam com todos, menos com si mesmos
 
-        if (ehSimples(matriz)) {
+        if (!loop(matriz)) {// não pode haver loop pois não deve se relacionar consigo mesmo
+
             for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
                 for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
                     if (matriz[indiceLinha][indiceColuna] == 1) {
@@ -282,10 +284,7 @@ public class Trab1 {
                     }
                 }
             }
-        } else {
-
         }
-
         return false;
     }
 
@@ -294,6 +293,13 @@ public class Trab1 {
      */
     private static boolean ehRegular(int[][] matriz) {
         String resposta = "";
+
+        if (ehCompleto(matriz)) {
+            return true;
+        }
+        if (ehNulo(matriz)) {
+            return true;
+        }
 
         if (!ehDigrafo(matriz)) {
 
@@ -369,36 +375,36 @@ public class Trab1 {
 
         //drigido ou não
         if (ehDigrafo(matriz)) {
-            resposta += "\tDigrafo (grafo dirigido)\n";
+            resposta += "\t.Digrafo (grafo dirigido)\n";
         } else {
-            resposta += "\tNão dirigido\n";
+            resposta += "\t.Não dirigido\n";
         }
 
         // simples ou multigrafo
-        if (ehSimples(matriz)) {
-            resposta += "\tSimples\n";
+        if (ehMultigrafo(matriz)) {
+            resposta += "\t.Multigrafo\n";
         } else {
-            resposta += "\tMultigrafo\n";
+            resposta += "\t.Simples\n";
         }
 
         // regular
         if (ehRegular(matriz)) {
-            resposta += "\tRegular\n";
+            resposta += "\t.Regular\n";
         }
 
         // completo
         if (ehCompleto(matriz)) {
-            resposta += "\tCompleto\n";
+            resposta += "\t.Completo\n";
         }
 
         //nulo
         if (ehNulo(matriz)) {
-            resposta += "\tNulo\n";
+            resposta += "\t.Nulo\n";
         }
 
         //bipartido
         if (ehBipartido(matriz)) {
-            resposta += "\tBipartido\n";
+            resposta += "\t.Bipartido\n";
         }
 
         return resposta;
@@ -407,10 +413,10 @@ public class Trab1 {
     private static String arestasDoGrafo(int[][] matriz) {
         String resposta = "b. Arestas:\n\tSendo 'E' o conjunto de arestas pelos índices da matriz Xij, sendo 'i' índiceColuna e 'j' índiceLinha, iniciando do zero:\n";
 
-        if (ehSimples(matriz)) {
-            resposta += arestasGrafoSimples(matriz);
-        } else {
+        if (ehMultigrafo(matriz)) {
             resposta += arestasMultigrafo(matriz);
+        } else {
+            resposta += arestasGrafoSimples(matriz);
         }
 
         return resposta += "\n";
