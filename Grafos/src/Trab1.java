@@ -11,7 +11,7 @@ public class Trab1 {
         int[][] minhaMatriz = geraMatriz();
 
         System.out.println("-------- Trabalho 1 . Anuska --------\n");
-        System.out.println("Matriz do grafo:\n");
+        System.out.println("Matriz de Adjacência:\n");
 
         toStringMatriz(minhaMatriz);
 
@@ -37,10 +37,19 @@ public class Trab1 {
         // Grafo multigrafo, não dirigido, graus 2,4,5,5, arestas 0-0, 0-1, 0-2, 0-3, 1-2, 1-0, 2-0 3-0, 2-1
         int[][] matriz3 = {{1, 1, 1, 1}, {1, 0, 1, 0}, {1, 1, 0, 3}, {1, 0, 3, 0}};
 
-        // Grafo dirigido, 
-        int[][] matriz4 = {{0, 1, 1, 0}, {0, 0, 0, 0}, {0, 0, 1, 1}, {1, 2, 1, 0}};
+        // Grafo nulo, simples, não dirigido, regular, todos grau 0
+        int[][] matriz4 = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
 
-        return matriz4;
+        // Grafo dirigido, multigrafo, grau saida: 0,2,3,4 e entrada 1,1,3,4
+        int[][] matriz5 = {{0, 1, 1, 0}, {0, 0, 0, 0}, {0, 0, 1, 1}, {1, 2, 1, 0}};
+
+        // Grafo dirigido, multigrafo, 8 arestas tendo 1 loop, tendo q repetir aresta 3-1, grau entrada 0,2,3,4, saida 1,1,3,4
+        int[][] matriz6 = {{0, 0, 0, 1}, {1, 0, 0, 2}, {1, 0, 1, 1}, {0, 0, 1, 0}};
+
+        // Grafo simples, dirigido, completo, regular, todos grau 3
+        int[][] matriz7 = {{0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 0}};
+
+        return matriz2;
     }
 
     private static void toStringMatriz(int[][] matriz) {
@@ -144,9 +153,13 @@ public class Trab1 {
             resposta += "\tVértice " + i + " - Grau de Saída: " + grauLinhaSaida[i] + "\n";
         }
 
+        resposta += "\n";
+
         for (int i = 0; i < grauColunaEntrada.length; i++) {
             resposta += "\tVértice " + i + " - Grau de Entrada: " + grauColunaEntrada[i] + "\n";
         }
+
+        resposta += "\n";
 
         //Sequência de graus:
         int[] sequenciaGrausSaida;
@@ -221,26 +234,7 @@ public class Trab1 {
     /*
     Arestas
      */
-    private static String arestasGrafoSimples(int[][] matriz) {
-        String conjuntoArestas = "";
-        int countArestas = 0;
-
-        if (!ehNulo(matriz)) {
-            for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
-                for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
-                    if (matriz[indiceLinha][indiceColuna] > 0) {
-                        countArestas += matriz[indiceLinha][indiceColuna];
-                        conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
-                    }
-                }
-            }
-        } else {
-            return "{} (Grafo nulo, portanto, não há arestas.)";
-        }
-        return "\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
-    }
-
-    private static String arestasMultigrafo(int[][] matriz) {
+    private static String arestasGrafo(int[][] matriz) {
         String conjuntoArestas = "";
         int countArestas = 0;
 
@@ -253,7 +247,6 @@ public class Trab1 {
                         countArestas += matriz[indiceLinha][indiceColuna];
                         if (valorMatriz == 1) {
                             conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
-
                         } else if (valorMatriz > 1) { //incrementar corretamente arestas paralelas
                             for (int i = 1; i <= valorMatriz;) {
                                 conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
@@ -266,17 +259,16 @@ public class Trab1 {
         } else {
             return "{} (Grafo nulo, portanto, não há arestas.)";
         }
-        return "\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
+        return "\n\tSendo 'E' o conjunto de arestas pelos índices da matriz Xij, sendo 'i' índiceColuna e 'j' índiceLinha, iniciando do zero:\n\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
     }
 
     /*
     Completo
      */
     private static boolean ehCompleto(int[][] matriz) {
+
         // diagonal principal zerada e o resto 1, pq todos se relacionam com todos, menos com si mesmos
-
-        if (!loop(matriz)) {// não pode haver loop pois não deve se relacionar consigo mesmo
-
+        if (!ehMultigrafo(matriz)) {// um grafo completo é um grafo simples onde cada par de vertices distintos é adjacente
             for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
                 for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
                     if (matriz[indiceLinha][indiceColuna] == 1) {
@@ -411,13 +403,8 @@ public class Trab1 {
     }
 
     private static String arestasDoGrafo(int[][] matriz) {
-        String resposta = "b. Arestas:\n\tSendo 'E' o conjunto de arestas pelos índices da matriz Xij, sendo 'i' índiceColuna e 'j' índiceLinha, iniciando do zero:\n";
-
-        if (ehMultigrafo(matriz)) {
-            resposta += arestasMultigrafo(matriz);
-        } else {
-            resposta += arestasGrafoSimples(matriz);
-        }
+        String resposta = "b. Arestas:";
+        resposta += arestasGrafo(matriz);
 
         return resposta += "\n";
     }
