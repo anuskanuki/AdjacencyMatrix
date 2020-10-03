@@ -49,7 +49,28 @@ public class Trab1 {
         // Grafo simples, dirigido, completo, regular, todos grau 3
         int[][] matriz7 = {{0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 0}};
 
-        return matriz2;
+        // não bipartido
+        int[][] matriz8 = {{0, 0, 1, 0, 0}, {0, 0, 1, 1, 0}, {1, 1, 0, 1, 1}, {0, 0, 1, 0, 1}, {0, 0, 1, 1, 0}};
+
+        // não bipartido
+        int[][] matriz9 = {{0, 1, 0, 0, 0}, {1, 0, 1, 1, 1}, {0, 1, 0, 1, 1}, {0, 1, 1, 0, 1}, {0, 1, 1, 1, 0}};
+
+        // não bipartido
+        int[][] matriz10 = {{0, 1, 0, 0, 1}, {1, 0, 1, 1, 1}, {0, 1, 0, 1, 0}, {0, 1, 1, 0, 1}, {1, 1, 0, 1, 0}};
+
+        // bipartido
+        int[][] matriz11 = {{0, 0, 1, 0, 0}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 1}, {0, 0, 1, 0, 0}, {0, 0, 1, 0, 0}};
+
+        // bipartido
+        int[][] matriz12 = {{0, 1, 0, 0, 0}, {1, 0, 1, 0, 1}, {0, 1, 0, 1, 0}, {0, 0, 1, 0, 1}, {0, 1, 0, 1, 0}};
+
+        // bipartido
+        int[][] matriz13 = {{0, 1, 0, 0}, {1, 0, 1, 1}, {0, 1, 0, 0}, {0, 1, 0, 0}};
+
+        // bipartido
+        int[][] matriz14 = {{0, 1, 0}, {1, 0, 1}, {0, 1, 0}};
+
+        return matriz13;
     }
 
     private static void toStringMatriz(int[][] matriz) {
@@ -343,19 +364,39 @@ public class Trab1 {
     /*
     Bipartido
      */
-    private static boolean ehBipartido(int[][] matriz) {
-        if (matriz.length >= 3 && ehCompleto(matriz)) {
+    public static boolean ehBipartido(int[][] matriz) {
+        if (loop(matriz)) {
             return false;
         }
 
-//        
-//        for (int indiceLinha = 0; indiceLinha < array.length; indiceLinha++) {
-//            for (int indiceColuna = 0; indiceColuna < array.length; indiceColuna++) {
-////                if () {
-//                return false;
-////                }
-//            }
-//        }
+        String[] cores = new String[matriz.length];
+
+        for (int i = 0; i < matriz.length; i++) {
+            if (cores[i] == null) {
+                cores[i] = "cinza";
+            }
+
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j] > 0 && cores[j] == null) {
+                    if (cores[i] == "cinza") {
+                        cores[j] = "preto";
+                    } else {
+                        cores[j] = "cinza";
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (i != j) {
+                    if (matriz[i][j] > 0 && cores[i] == cores[j]) {
+                        return false;
+                    }
+                }
+            }
+        }
+
         return true;
     }
 
