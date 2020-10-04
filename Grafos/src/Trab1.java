@@ -49,8 +49,7 @@ public class Trab1 {
         // Grafo simples, não dirigido, completo, regular, todos grau 3
         int[][] matriz7 = {{0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 0}};
 
-        // não bipartido, simples, não dirigido 
-        // ERRO: DIRIGIDO
+        // não bipartido, simples, dirigido
         int[][] matriz8 = {{0, 0, 1, 0, 0}, {0, 0, 1, 1, 0}, {1, 1, 0, 1, 1}, {0, 0, 1, 0, 1}, {0, 0, 1, 1, 0}};
 
         // não bipartido, simples, não dirigido
@@ -68,11 +67,11 @@ public class Trab1 {
         // bipartido, simples, não dirigido
         int[][] matriz13 = {{0, 1, 0, 0}, {1, 0, 1, 1}, {0, 1, 0, 0}, {0, 1, 0, 0}};
 
-        // bipartido
+        // bipartido, simples, não dirigido
         int[][] matriz14 = {{0, 1, 0}, {1, 0, 1}, {0, 1, 0}};
 
-        // return matriz13;
-        return matriz14;
+        // Retornar qualquer matriz para fazer os testes
+        return matriz8;
     }
 
     private static void toStringMatriz(int[][] matriz) {
