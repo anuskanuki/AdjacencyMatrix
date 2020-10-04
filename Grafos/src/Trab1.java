@@ -46,31 +46,33 @@ public class Trab1 {
         // Grafo dirigido, multigrafo, 8 arestas tendo 1 loop, tendo q repetir aresta 3-1, grau entrada 0,2,3,4, saida 1,1,3,4
         int[][] matriz6 = {{0, 0, 0, 1}, {1, 0, 0, 2}, {1, 0, 1, 1}, {0, 0, 1, 0}};
 
-        // Grafo simples, dirigido, completo, regular, todos grau 3
+        // Grafo simples, não dirigido, completo, regular, todos grau 3
         int[][] matriz7 = {{0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 0}};
 
-        // não bipartido
+        // não bipartido, simples, não dirigido 
+        // ERRO: DIRIGIDO
         int[][] matriz8 = {{0, 0, 1, 0, 0}, {0, 0, 1, 1, 0}, {1, 1, 0, 1, 1}, {0, 0, 1, 0, 1}, {0, 0, 1, 1, 0}};
 
-        // não bipartido
+        // não bipartido, simples, não dirigido
         int[][] matriz9 = {{0, 1, 0, 0, 0}, {1, 0, 1, 1, 1}, {0, 1, 0, 1, 1}, {0, 1, 1, 0, 1}, {0, 1, 1, 1, 0}};
 
-        // não bipartido
+        // não bipartido, simples, não dirigido
         int[][] matriz10 = {{0, 1, 0, 0, 1}, {1, 0, 1, 1, 1}, {0, 1, 0, 1, 0}, {0, 1, 1, 0, 1}, {1, 1, 0, 1, 0}};
 
-        // bipartido
+        // bipartido, simples, não dirigido
         int[][] matriz11 = {{0, 0, 1, 0, 0}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 1}, {0, 0, 1, 0, 0}, {0, 0, 1, 0, 0}};
 
-        // bipartido
+        // bipartido, simples, não dirigido
         int[][] matriz12 = {{0, 1, 0, 0, 0}, {1, 0, 1, 0, 1}, {0, 1, 0, 1, 0}, {0, 0, 1, 0, 1}, {0, 1, 0, 1, 0}};
 
-        // bipartido
+        // bipartido, simples, não dirigido
         int[][] matriz13 = {{0, 1, 0, 0}, {1, 0, 1, 1}, {0, 1, 0, 0}, {0, 1, 0, 0}};
 
         // bipartido
         int[][] matriz14 = {{0, 1, 0}, {1, 0, 1}, {0, 1, 0}};
 
-        return matriz13;
+        // return matriz13;
+        return matriz14;
     }
 
     private static void toStringMatriz(int[][] matriz) {
@@ -267,10 +269,10 @@ public class Trab1 {
                     if (valorMatriz > 0) {
                         countArestas += matriz[indiceLinha][indiceColuna];
                         if (valorMatriz == 1) {
-                            conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
+                            conjuntoArestas += indiceLinha + "-" + indiceColuna + ", ";
                         } else if (valorMatriz > 1) { //incrementar corretamente arestas paralelas
                             for (int i = 1; i <= valorMatriz;) {
-                                conjuntoArestas += indiceColuna + "-" + indiceLinha + ", ";
+                                conjuntoArestas += indiceLinha + "-" + indiceColuna + ", ";
                                 i++;
                             }
                         }
@@ -280,25 +282,34 @@ public class Trab1 {
         } else {
             return "{} (Grafo nulo, portanto, não há arestas.)";
         }
-        return "\n\tSendo 'E' o conjunto de arestas pelos índices da matriz Xij, sendo 'i' índiceColuna e 'j' índiceLinha, iniciando do zero:\n\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
+        return "\n\tSendo 'E' o conjunto de arestas pelos índices da matriz Xij, sendo 'i' índiceLinha e 'j' índiceColuna, iniciando do zero:\n\tE = {" + conjuntoArestas + "}\n\tTotalizando " + countArestas + " arestas.";
     }
 
     /*
     Completo
      */
     private static boolean ehCompleto(int[][] matriz) {
+        if (ehMultigrafo(matriz)) {
+            return false;
+        }
 
         // diagonal principal zerada e o resto 1, pq todos se relacionam com todos, menos com si mesmos
         if (!ehMultigrafo(matriz)) {// um grafo completo é um grafo simples onde cada par de vertices distintos é adjacente
             for (int indiceLinha = 0; indiceLinha < matriz.length; indiceLinha++) {
                 for (int indiceColuna = 0; indiceColuna < matriz.length; indiceColuna++) {
-                    if (matriz[indiceLinha][indiceColuna] == 1) {
-                        return true;
+                    if (indiceLinha != indiceColuna) {
+                        if (matriz[indiceLinha][indiceColuna] != 1) {
+                            return false;
+                        }
+                    } else {
+                        if (matriz[indiceLinha][indiceColuna] != 0) {
+                            return false;
+                        }
                     }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /*
@@ -337,11 +348,6 @@ public class Trab1 {
                 }
             }
             return true;
-        } else {
-            if (ehNulo(matriz)) {
-                return true;
-            }
-            // se for dirigido vejo de uma forma diferente pois há jeitos de graus diferentes
         }
 
         return false;
