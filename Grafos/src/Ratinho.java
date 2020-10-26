@@ -1,5 +1,5 @@
 /*
-ANUSKA KEPLER E BRUNA SHROEDER
+ANUSKA KEPLER E BRUNA SCHROEDER
  */
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -87,6 +87,7 @@ public class Ratinho {
     public static class Grafo {
 
         List<Vertice> vertices;
+        int quantidadeArestas = 0;
 
         public Grafo(List<Vertice> vertices) {
             this.vertices = vertices;
@@ -96,6 +97,7 @@ public class Ratinho {
             Vertice vertice1 = buscarVertice(pontoA);
             Vertice vertice2 = buscarVertice(pontoB);
             vertice1.listaAdj.add(vertice2);
+            quantidadeArestas++;
         }
 
         private Vertice buscarVertice(String nomeVertice) {
@@ -314,30 +316,46 @@ public class Ratinho {
         return grafo;
     }
 
+    public static Grafo criarGrafo6Erros() {
+        List<Vertice> vertices = new ArrayList<>();
+        vertices.add(new Vertice("Entrada"));
+        vertices.add(new Vertice("*"));
+        //vertices.add(new Vertice("A"));
+        // vertices.add(new Vertice("Saida"));
+
+        Grafo grafo = new Grafo(vertices);
+        grafo.insereAresta("Entrada", "*");
+        // grafo.insereAresta("Entrada", "Saida");
+        // grafo.insereAresta("*", "Saida");
+        //grafo.insereAresta("*", "Saida");
+
+        return grafo;
+    }
+
     public static void realizaBuscas(Grafo grafo, String verticeEntrada, String verticeSaida) {
 
-        boolean pontosValidos = grafo.vertices.size() > 4 || grafo.vertices.size() < 4000;
+        boolean pontosValidos = (grafo.vertices.size() > 4 && grafo.vertices.size() < 4000);
+        boolean ligacoesValidas = (grafo.quantidadeArestas > 4 && grafo.quantidadeArestas < 5000);
 
-        if (pontosValidos) {
+        if (pontosValidos && ligacoesValidas) {
             if (verticeEntrada.equals(verticeSaida)) {
-                System.out.println("\n A distância é 0, pois é o mesmo ponto");
+                System.out.println("\n A distância é 0, pois é o mesmo ponto.");
             } else {
                 Distancia distanciaA = distanciaEntreDois(grafo, verticeEntrada, "*");
-
                 if (distanciaA == null) {
-                    System.out.print("\n Erro não esperado: Distância A não encontrada");
+                    System.out.print("\n Erro não esperado: Distância A não encontrada.");
                 } else {
                     if (distanciaA.valor == INFINITO) {
-                        System.out.println("\n Não conseguimos pegar o queijo entre o vertice (" + verticeEntrada + ") e o vertice (" + verticeSaida + ")");
+                        System.out.println("\n Não conseguimos pegar o queijo e sair por '" + verticeSaida + "' dado o vértice entrada '" + verticeEntrada + "'.");
                     } else {
                         int tempoA = distanciaA.valor;
                         listaDistancias = new ArrayList<>();
                         Distancia distanciaB = distanciaEntreDois(grafo, "*", verticeSaida);
                         if (distanciaB == null) {
-                            System.out.print("\n Erro não esperado: Distância B não encontrada");
+                            System.out.print("\n Erro não esperado: Distância B não encontrada.");
                         } else {
                             if (distanciaB.valor == INFINITO) {
-                                System.out.println("\n Não conseguimos pegar o queijo entre o vertice (" + verticeEntrada + ") e o vertice (" + verticeSaida + ")");
+                                System.out.println("\n Não conseguimos pegar o queijo e sair por '" + verticeSaida + "' dado o vértice entrada '" + verticeEntrada + "'.");
                             } else {
                                 System.out.println("\n A distancia entre v(" + verticeEntrada + ") e v(" + verticeSaida + ") é: " + (tempoA + distanciaB.valor) + " (pegando o queijo no caminho).");
                             }
@@ -346,7 +364,7 @@ public class Ratinho {
                 }
             }
         } else {
-            System.out.println("\n A quantidade de pontos (vértices) deve ser entre 4 e 4000");
+            System.out.println("\n A quantidade de pontos (vértices) deve ser entre 4 e 4000 e A quantidade de ligações (arestas) deve ser entre 4 e 5000.");
         }
     }
 
